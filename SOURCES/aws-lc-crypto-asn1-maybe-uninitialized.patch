@@ -1,0 +1,18 @@
+diff -rup aws-lc-1.32.0.ori/crypto/asn1/a_strex.c aws-lc-1.32.0/crypto/asn1/a_strex.c
+--- aws-lc-1.32.0.ori/crypto/asn1/a_strex.c	2024-07-15 18:19:04.000000000 +0200
++++ aws-lc-1.32.0/crypto/asn1/a_strex.c	2024-07-25 02:57:18.000000000 +0200
+@@ -160,7 +160,13 @@ static int do_buf(const unsigned char *b
+     // for invalid codepoints. Before doing that, enforce it in the parser,
+     // https://crbug.com/boringssl/427, so these error cases are not
+     // reachable from parsed objects.
+-    uint32_t c;
++    //
++    // Build fails on GCC 11.4.1 with -Werror=maybe-uninitialized on c
++    // because of the case when UTF8_getc() returns 0, if (buf)len <= 0.
++    // This case would not happen if buflen is 0, we would not enter the
++    // loop due to the (p != q) condition. Let's just initialize c to 0.
++    // BoringSSL has different code here using CBS_* functions.
++    uint32_t c = 0;
+     switch (encoding) {
+       case MBSTRING_UNIV:
+         c = ((uint32_t)*p++) << 24;
