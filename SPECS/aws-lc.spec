@@ -12,7 +12,7 @@
 %global source_date_epoch_from_changelog 0
 
 Name: aws-lc-0z
-Version: 1.48.5
+Version: 1.49.1
 Release: 1%{?dist}.zenetys
 Summary: AWS-LC cryptographic library
 License: Apache-2.0 OR ISC OR BSD-3-Clause OR MIT OR CC0-1.0 OR OpenSSL OR SSLeay-standalone
@@ -66,6 +66,7 @@ echo '%%%(echo %{name} |tr '-' '_')_prefix %{_prefix}' \
 %license LICENSE
 
 %{_bindir}/bssl
+%{_bindir}/c_rehash
 %{_bindir}/openssl
 
 %{_libdir}/libcrypto.so
