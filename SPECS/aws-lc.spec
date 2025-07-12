@@ -12,15 +12,13 @@
 %global source_date_epoch_from_changelog 0
 
 Name: aws-lc-0z
-Version: 1.53.1
+Version: 1.55.0
 Release: 1%{?dist}.zenetys
 Summary: AWS-LC cryptographic library
 License: Apache-2.0 OR ISC OR BSD-3-Clause OR MIT OR CC0-1.0 OR OpenSSL OR SSLeay-standalone
 URL: https://github.com/aws/aws-lc
 
 Source0: https://github.com/aws/aws-lc/archive/refs/tags/v%{version}.tar.gz#/aws-lc-%{version}.tar.gz
-
-Patch100: aws-lc-crypto-asn1-maybe-uninitialized.patch
 
 BuildRequires: cmake >= 3.0
 BuildRequires: gcc
@@ -33,7 +31,6 @@ from the Google BoringSSL project and the OpenSSL project.
 
 %prep
 %setup -n aws-lc-%{version}
-%patch100 -p1
 
 %build
 %cmake \
