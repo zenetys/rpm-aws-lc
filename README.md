@@ -1,6 +1,6 @@
 | <nobr>Package name</nobr> | <nobr>Supported targets</nobr> |
 | :--- | :--- |
-| aws-lc-0z | <nobr>el8, el9</nobr> |
+| aws-lc-0z | <nobr>el8, el9, el10</nobr> |
 <br/>
 
 ## Build:
