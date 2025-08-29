@@ -1,4 +1,4 @@
-# Supported targets: el8, el9
+# Supported targets: el8, el9, el10
 
 %define _prefix /opt/%{name}
 %define _docdir_fmt aws-lc
