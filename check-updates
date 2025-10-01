@@ -149,7 +149,7 @@ function check-updates() {
     if [[ ${ordered[1]} != $current ]]; then
       if [[ $FILENAME ]] && echo "$base $version" |
           grep -qFx -f <(sed -nre 's,^#ignore (.*),\1,p' "$FILENAME"); then
-        [[ $VERBOSE ]] && echo "[DEBUG] ignored version: $version" >&2
+        if [[ $VERBOSE ]]; then echo "[DEBUG] ignored version: $version" >&2; fi
       else
         echo "** $base ($current) need update to $version **"
         return 1
