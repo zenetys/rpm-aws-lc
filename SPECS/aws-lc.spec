@@ -9,10 +9,6 @@
 %undefine __cmake_in_source_build
 %endif
 
-%if 0%{?rhel} >= 10
-%undefine _auto_set_build_flags
-%endif
-
 %global source_date_epoch_from_changelog 0
 
 Name: aws-lc-0z
@@ -37,23 +33,20 @@ from the Google BoringSSL project and the OpenSSL project.
 %setup -n aws-lc-%{version}
 
 %build
-cmake \
-    -S . \
-    -B %{__cmake_builddir} \
-    %if %{make_verbose}
-    -DCMAKE_VERBOSE_MAKEFILE=ON \
+%cmake \
+    %if !%{make_verbose}
+    -DCMAKE_VERBOSE_MAKEFILE=OFF \
     %endif
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DBUILD_SHARED_LIBS=1 \
     -DDISABLE_GO=1 \
     -DDISABLE_PERL=1 \
     -DBUILD_TESTING=0 \
-    -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
     -DCMAKE_SHARED_LINKER_FLAGS='-Wl,-rpath,$ORIGIN' \
     -DCMAKE_EXE_LINKER_FLAGS='-Wl,-rpath,$ORIGIN/../%{_lib}'
 
 # use --define 'make_verbose 1' to enable verbose
-cmake --build %{__cmake_builddir} %{?_smp_mflags}
+%(x='%{cmake_build}'; echo ${x/ --verbose})
 
 %install
 %cmake_install
