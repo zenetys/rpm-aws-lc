@@ -1,4 +1,4 @@
-aws-lc 1.67.0 json:map(.html_url)[]:.+ https://api.github.com/repos/aws/aws-lc/releases <tag/v([0-9][0-9.]*)
+aws-lc 1.68.0 json:map(.html_url)[]:.+ https://api.github.com/repos/aws/aws-lc/releases <tag/v([0-9][0-9.]*)
 
 #ignore aws-lc 1.61.4
 #ignore aws-lc 1.66.2
