@@ -12,7 +12,7 @@
 %global source_date_epoch_from_changelog 0
 
 Name: aws-lc-0z
-Version: 1.70.0
+Version: 1.71.0
 Release: 1%{?dist}.zenetys
 Summary: AWS-LC cryptographic library
 License: Apache-2.0 OR ISC OR BSD-3-Clause OR MIT OR CC0-1.0 OR OpenSSL OR SSLeay-standalone
@@ -78,6 +78,7 @@ AWS-LC development files from package %{name}.
 
 %files devel
 %{_includedir}/openssl
+%{_libdir}/pkgconfig/aws-lc.pc
 %{_libdir}/pkgconfig/libcrypto.pc
 %{_libdir}/pkgconfig/libssl.pc
 %{_libdir}/pkgconfig/openssl.pc
