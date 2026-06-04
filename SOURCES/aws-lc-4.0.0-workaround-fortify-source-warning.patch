@@ -1,0 +1,41 @@
+From 1caa8a4f6fa355bf94ea8802b23ae3d777c93979 Mon Sep 17 00:00:00 2001
+From: Sean McGrail <549813+skmcgrail@users.noreply.github.com>
+Date: Tue, 7 Oct 2025 13:52:36 +0000
+Subject: [PATCH] Implement workaround for FORTIFY_SOURCE warning with
+ jitterentropy (#2728)
+
+### Issues:
+Resolves #2725
+
+### Description of changes:
+We have received several reports where users are required to workaround
+compilation issues with v1.60.0+ releases of AWS-LC where we
+re-introduced jitterentropy into the library. This silences the
+associated fortify source warnings if FORTIFY_SOURCE is enabled, as the
+`-O0` optimization flag, required by jitterentropy's design, is not
+compatible with it.
+
+By submitting this pull request, I confirm that my contribution is made
+under the terms of the Apache 2.0 license and the ISC license.
+
+(cherry picked from commit 4f2a89a9aa5b8dd0ad2ca026af3f95c5f87914e8)
+---
+ third_party/jitterentropy/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/third_party/jitterentropy/CMakeLists.txt b/third_party/jitterentropy/CMakeLists.txt
+index 82f30606b..0ed44330a 100644
+--- a/third_party/jitterentropy/CMakeLists.txt
++++ b/third_party/jitterentropy/CMakeLists.txt
+@@ -24,7 +24,7 @@ if(WIN32)
+     endif()
+ else()
+     set(CMAKE_POSITION_INDEPENDENT_CODE true)
+-    set(JITTER_COMPILE_FLAGS "-DAWSLC -fwrapv --param ssp-buffer-size=4 -fvisibility=hidden -Wcast-align -Wmissing-field-initializers -Wshadow -Wswitch-enum -Wextra -Wall -pedantic -O0 -fwrapv")
++    set(JITTER_COMPILE_FLAGS "-DAWSLC -fwrapv --param ssp-buffer-size=4 -fvisibility=hidden -Wcast-align -Wmissing-field-initializers -Wshadow -Wswitch-enum -Wextra -Wall -pedantic -O0 -fwrapv -Wp,-U_FORTIFY_SOURCE")
+     if ((NOT GCC) OR (GCC AND CMAKE_C_COMPILER_VERSION VERSION_GREATER "4.3"))
+         # -Wconversion was changed from GCC version 4.3. Prior it was meant as
+         # an aid in translating code from old C to modern C. It was not meant
+-- 
+2.54.0
+

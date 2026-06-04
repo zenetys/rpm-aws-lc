@@ -1,0 +1,53 @@
+From 2d870090dfef051943df419b8b6d39d7df8429aa Mon Sep 17 00:00:00 2001
+From: torben-hansen <50673096+torben-hansen@users.noreply.github.com>
+Date: Mon, 27 Oct 2025 09:45:53 -0700
+Subject: [PATCH] Do no consider warnings fatal in CPU Jitter for LTO build
+ (#2769)
+
+At the moment, CPU Jitter source code needs to disable all optimizations.
+This means we can't inherit FORTITY_SOURCE and we therefore undefine
+the flag through U_FORTIFY_SOURCE. If one were to use annobin as a plugin
+and, simultaneously use LTO, annobin will emit a warning if FORTIFY_SOURCE
+is undefined. This is fatal if all warnings are treated as errors.
+
+The correct signal to use for below is annobin. But since we know that
+annobin is not necessarily being enabled through -fplugin, match with LTO
+and disable turning warnings into errors. This is also kinda fragile; LTO
+could be defined through other means similar to annobin. But it's what we
+have to work with atm.
+
+(cherry picked from commit 6c1c11b6ca43eb096a74b51a4a0777b528ada4bf)
+---
+ third_party/jitterentropy/CMakeLists.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/third_party/jitterentropy/CMakeLists.txt b/third_party/jitterentropy/CMakeLists.txt
+index 0ed44330a..ce4825fb9 100644
+--- a/third_party/jitterentropy/CMakeLists.txt
++++ b/third_party/jitterentropy/CMakeLists.txt
+@@ -32,6 +32,22 @@ else()
+         # https://gcc.gnu.org/wiki/NewWconversion.
+         set(JITTER_COMPILE_FLAGS "${JITTER_COMPILE_FLAGS} -Wconversion")
+     endif()
++
++    # See t/P319995887.
++    # At the moment, CPU Jitter source code needs to disable all optimizations.
++    # This means we can't inherit FORTITY_SOURCE and we therefore undefine
++    # the flag through U_FORTIFY_SOURCE. If one were to use annobin as a plugin
++    # and, simultaneously use LTO, annobin will emit a warning if FORTIFY_SOURCE
++    # is undefined. This is fatal if all warnings are treated as errors.
++    #
++    # The correct signal to use for below is annobin. But since we know that
++    # annobin is not necessarily being enabled through -fplugin, match with LTO
++    # and disable turning warnings into errors. This is also kinda fragile; LTO
++    # could be defined through other means similar to annobin. But it's what we
++    # have to work with atm.
++    if ("lto" MATCHES "${CMAKE_CFLAGS}")
++        set(JITTER_COMPILE_FLAGS "${JITTER_COMPILE_FLAGS} -Wno-error")
++    endif()
+ endif()
+ 
+ if(BORINGSSL_PREFIX)
+-- 
+2.54.0
+

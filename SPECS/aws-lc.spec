@@ -11,14 +11,17 @@
 
 %global source_date_epoch_from_changelog 0
 
-Name: aws-lc-0z
-Version: 1.73.0
+Name: aws-lc-4z
+Version: 4.0.0
 Release: 1%{?dist}.zenetys
 Summary: AWS-LC cryptographic library
 License: Apache-2.0 OR ISC OR BSD-3-Clause OR MIT OR CC0-1.0 OR OpenSSL OR SSLeay-standalone
 URL: https://github.com/aws/aws-lc
 
 Source0: https://github.com/aws/aws-lc/archive/refs/tags/v%{version}.tar.gz#/aws-lc-%{version}.tar.gz
+
+Patch100: aws-lc-4.0.0-workaround-fortify-source-warning.patch
+Patch101: aws-lc-4.0.0-consider-warnings-fatal-in-cpu-jitter-for-lto.patch
 
 BuildRequires: cmake >= 3.0
 BuildRequires: gcc
@@ -31,6 +34,8 @@ from the Google BoringSSL project and the OpenSSL project.
 
 %prep
 %setup -n aws-lc-%{version}
+%patch -P 100 -p 1
+%patch -P 101 -p 1
 
 %build
 %cmake \
@@ -78,7 +83,6 @@ AWS-LC development files from package %{name}.
 
 %files devel
 %{_includedir}/openssl
-%{_libdir}/pkgconfig/aws-lc.pc
 %{_libdir}/pkgconfig/libcrypto.pc
 %{_libdir}/pkgconfig/libssl.pc
 %{_libdir}/pkgconfig/openssl.pc
